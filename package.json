@@ -1,0 +1,21 @@
+{
+  "name": "api-restful",
+  "version": "1.0.0",
+  "description": "API RESTful de tickets y notificaciones para el Laboratorio 05",
+  "main": "app.js",
+  "scripts": {
+    "start": "node app.js",
+    "dev": "nodemon app.js",
+    "test": "node --test"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "cors": "^2.8.6",
+    "express": "^5.2.1",
+    "morgan": "^1.12.1",
+    "nodemon": "^3.1.14",
+    "uuid": "^14.0.2"
+  }
+}
