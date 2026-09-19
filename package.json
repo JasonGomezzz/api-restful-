@@ -6,7 +6,8 @@
   "scripts": {
     "start": "node app.js",
     "dev": "nodemon app.js",
-    "test": "node --test"
+    "test": "node --test",
+    "email:verify": "node scripts/verify-email.js"
   },
   "keywords": [],
   "author": "",
