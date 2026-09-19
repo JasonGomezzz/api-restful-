@@ -5,7 +5,7 @@
   "main": "app.js",
   "scripts": {
     "start": "node app.js",
-    "dev": "nodemon app.js",
+    "dev": "nodemon --ignore database/db.json app.js",
     "test": "node --test",
     "email:verify": "node scripts/verify-email.js"
   },
