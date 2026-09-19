@@ -4,6 +4,8 @@ const cors = require("cors");
 const morgan = require("morgan");
 const ticketRoutes = require("./routes/ticket.routes");
 const notificationRoutes = require("./routes/notification.routes");
+const errorHandler = require("./middlewares/errorHandler");
+const AppError = require("./errors/AppError");
 
 // Middleware
 app.use(express.json()); // Para leer JSON en las solicitudes
@@ -17,6 +19,12 @@ app.get("/", (req, res) => {
 
 app.use("/tickets", ticketRoutes);
 app.use("/notifications", notificationRoutes);
+
+app.use((req, res, next) => {
+  next(new AppError("Ruta no encontrada", 404));
+});
+
+app.use(errorHandler);
 
 const PORT = process.env.PORT || 3000;
 

@@ -1,6 +1,7 @@
 const { v4: uuidv4 } = require("uuid");
 const TicketRepository = require("../repositories/TicketRepository");
 const NotificationService = require("./NotificationService");
+const AppError = require("../errors/AppError");
 
 class TicketService {
   constructor() {
@@ -31,13 +32,15 @@ class TicketService {
   assignTicket(id, user) {
     const ticket = this.repo.update(id, { assignedUser: user });
 
-    if (ticket) {
-      this.notificationService.create(
-        "email",
-        `El ticket ${ticket.id} fue asignado a ${user}`,
-        ticket.id,
-      );
+    if (!ticket) {
+      throw new AppError("Ticket no encontrado", 404);
     }
+
+    this.notificationService.create(
+      "email",
+      `El ticket ${ticket.id} fue asignado a ${user}`,
+      ticket.id,
+    );
 
     return ticket;
   }
@@ -45,13 +48,15 @@ class TicketService {
   changeStatus(id, newStatus) {
     const ticket = this.repo.update(id, { status: newStatus });
 
-    if (ticket) {
-      this.notificationService.create(
-        "push",
-        `El ticket ${ticket.id} cambió a ${newStatus}`,
-        ticket.id,
-      );
+    if (!ticket) {
+      throw new AppError("Ticket no encontrado", 404);
     }
+
+    this.notificationService.create(
+      "push",
+      `El ticket ${ticket.id} cambió a ${newStatus}`,
+      ticket.id,
+    );
 
     return ticket;
   }
@@ -64,7 +69,7 @@ class TicketService {
     const deleted = this.repo.delete(id);
 
     if (!deleted) {
-      throw new Error("Ticket no encontrado");
+      throw new AppError("Ticket no encontrado", 404);
     }
 
     return true;
