@@ -6,6 +6,7 @@ const path = require("node:path");
 
 const testDirectory = fs.mkdtempSync(path.join(os.tmpdir(), "api-restful-"));
 process.env.DB_PATH = path.join(testDirectory, "db.json");
+process.env.EMAIL_ENABLED = "false";
 fs.writeFileSync(
   process.env.DB_PATH,
   JSON.stringify({ tickets: [], notifications: [] }),
@@ -70,6 +71,7 @@ test("flujo completo de tickets, paginación, errores y notificaciones", async (
         }),
       });
       assert.equal(response.status, 201);
+      assert.equal(body.notification.status, "disabled");
       tickets.push(body);
     }
   });
