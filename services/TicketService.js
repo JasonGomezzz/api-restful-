@@ -61,8 +61,27 @@ class TicketService {
     return ticket;
   }
 
-  list() {
-    return this.repo.findAll();
+  list(page, limit) {
+    const tickets = this.repo.findAll();
+    const start = (page - 1) * limit;
+
+    return {
+      data: tickets.slice(start, start + limit),
+      pagination: {
+        page,
+        limit,
+        total: tickets.length,
+        totalPages: Math.ceil(tickets.length / limit),
+      },
+    };
+  }
+
+  getNotifications(id) {
+    if (!this.repo.findById(id)) {
+      throw new AppError("Ticket no encontrado", 404);
+    }
+
+    return this.notificationService.listByTicketId(id);
   }
 
   deleteTicket(id) {
