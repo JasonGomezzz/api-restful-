@@ -9,7 +9,7 @@ class TicketService {
     this.notificationService = new NotificationService();
   }
 
-  createTicket(data) {
+  async createTicket(data) {
     const ticket = {
       id: uuidv4(),
       title: data.title,
@@ -20,45 +20,45 @@ class TicketService {
     };
 
     this.repo.save(ticket);
-    this.notificationService.create(
+    const notification = await this.notificationService.create(
       "email",
       `Nuevo ticket creado: ${ticket.title}`,
       ticket.id,
     );
 
-    return ticket;
+    return { ...ticket, notification };
   }
 
-  assignTicket(id, user) {
+  async assignTicket(id, user) {
     const ticket = this.repo.update(id, { assignedUser: user });
 
     if (!ticket) {
       throw new AppError("Ticket no encontrado", 404);
     }
 
-    this.notificationService.create(
+    const notification = await this.notificationService.create(
       "email",
       `El ticket ${ticket.id} fue asignado a ${user}`,
       ticket.id,
     );
 
-    return ticket;
+    return { ...ticket, notification };
   }
 
-  changeStatus(id, newStatus) {
+  async changeStatus(id, newStatus) {
     const ticket = this.repo.update(id, { status: newStatus });
 
     if (!ticket) {
       throw new AppError("Ticket no encontrado", 404);
     }
 
-    this.notificationService.create(
+    const notification = await this.notificationService.create(
       "push",
       `El ticket ${ticket.id} cambió a ${newStatus}`,
       ticket.id,
     );
 
-    return ticket;
+    return { ...ticket, notification };
   }
 
   list(page, limit) {
